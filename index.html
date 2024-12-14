@@ -1,0 +1,166 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Product Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script
+      src="https://kit.fontawesome.com/0fcf5ec748.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="font-roboto">
+    <section class="bg-white max-w-7xl mx-auto my-12">
+      <div class="gap-16 flex flex-row items-center">
+        <!-- image -->
+        <div class="basis-1/2">
+          <img
+            alt="Smart watch"
+            id="watch-image"
+            class="w-full rounded-lg shadow-lg"
+            height="720"
+            src="./assets/images/light-blue-watch.png"
+            width="630"
+          />
+        </div>
+        <div class="basis-1/2">
+          <!-- heading -->
+          <h1 class="text-4xl font-bold text-[#364A63]">
+            Classy Modern Smart watch
+          </h1>
+          <!-- rating star -->
+          <div class="flex items-center mt-3">
+            <div class="flex items-center gap-1 text-[#FFD200]">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-regular fa-star-half-stroke"></i>
+              <i class="fa-regular fa-star"></i>
+            </div>
+            <span class="ml-2 text-[#8091A7]"> (2 Reviews) </span>
+          </div>
+          <!-- description -->
+          <div class="mt-4">
+            <span class="text-gray-500 line-through"> $99.00 </span>
+            <span class="text-2xl font-bold text-blue-600 ml-2"> $79.00 </span>
+          </div>
+          <p class="mt-4 text-lg text-[#8091A7]">
+            I must explain to you how all this mistaken idea of denouncing
+            pleasure and praising pain was born and I will give you a complete
+            account of the system, and expound the actual teaching.
+          </p>
+          <div class="mt-4 flex gap-10">
+            <div class="flex flex-col">
+              <span class="text-[#8091A7] text-sm"> Type </span>
+              <span class="text-base font-bold text-[#364A63]">Watch</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-[#8091A7] text-sm">Model Number</span>
+              <span class="text-base font-bold text-[#364A63]">
+                Forerunner 290XT
+              </span>
+            </div>
+          </div>
+          <!-- brand color-->
+          <div class="mt-4">
+            <span class="text-lg font-bold text-[#364A63]">Band Color</span>
+            <!-- radio button -->
+            <div
+              id="radio-container"
+              class="flex items-center mt-2 gap-2"
+            ></div>
+          </div>
+          <!-- brand size and priceong -->
+          <div class="mt-4">
+            <span class="text-[#364A63] font-bold">Wrist Size</span>
+            <div class="flex items-center mt-2 gap-4">
+              <button
+                onclick="handleButtonClick(this,'S','69')"
+                class="btn px-4 py-2 border border-blue-500 rounded-lg text-gray-700 active:border-blue-500 focus:outline-none"
+              >
+                <span class="font-bold">S</span>
+                <span class="text-[#8091A7]">$69</span>
+              </button>
+              <button
+                onclick="handleButtonClick(this,'M', '79')"
+                class="btn px-4 py-2 border border-[#DBDFEA] rounded-lg text-gray-700 focus:border-blue-500 focus:outline-none"
+              >
+                <span class="font-bold">M</span>
+                <span class="text-[#8091A7]"> $79 </span>
+              </button>
+              <button
+                onclick="handleButtonClick(this, 'L', '89')"
+                class="btn px-4 py-2 border border-[#DBDFEA] rounded-lg text-gray-700 focus:border-blue-500 focus:outline-none"
+              >
+                <span class="font-bold">L</span>
+                <span class="text-[#8091A7]">$89</span>
+              </button>
+              <button
+                onclick="handleButtonClick(this,'XL', '99')"
+                class="btn px-4 py-2 border border-[#DBDFEA] rounded-lg text-gray-700 focus:border-blue-500 focus:outline-none"
+              >
+                <span class="font-bold">XL</span>
+                <span class="text-[#8091A7]">$99</span>
+              </button>
+            </div>
+            <!-- add to cart -->
+            <div class="mt-4 flex items-center">
+              <button
+                class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700"
+                onclick="updateCount(-1)"
+              >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span class="counter mx-4 text-gray-700">0</span>
+              <button
+                class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700"
+                onclick="updateCount(1)"
+              >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+              <button
+                onclick="addToCartBtn()"
+                class="ml-4 px-6 py-2 bg-blue-600 text-white rounded-lg"
+              >
+                Add to Cart
+              </button>
+              <button class="ml-4 text-gray-500">
+                <i class="far fa-heart"> </i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- checkout button -->
+      <div
+        id="checkout-btn"
+        class="hidden flex items-center justify-center mt-28"
+      >
+        <button
+          onclick="checkoutBtn()"
+          class="bg-[#FFBB5A] flex items-center gap-2 justify-center font-bold text-[#364A63] px-5 py-1 rounded-3xl"
+        >
+          <span>Checkout</span>
+          <span id="total-count" class="bg-white px-2 rounded-lg mt-1">0</span>
+        </button>
+      </div>
+      <div
+        id="modal"
+        class="fixed inset-0 flex items-center justify-center hidden bg-black bg-opacity-50"
+      >
+        <div id="modalContent" class="bg-white rounded-lg p-6 w-96">
+          <div id="modalData"></div>
+          <button
+            class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
+
+<script src="./js/main.js"></script>
