@@ -26,6 +26,7 @@ const products = [
   },
 ];
 
+// initialize selected products
 let selectedProducts = {
   name: " Classy Modern Smart watch",
   bandColor: [],
@@ -34,6 +35,8 @@ let selectedProducts = {
   price: [],
   total: [],
 };
+
+// initialize current selected product
 let currentProduct = {
   name: " Classy Modern Smart watch",
   bandColor: "Light Blue",
@@ -46,10 +49,14 @@ let currentProduct = {
 let total = 0;
 const checkoutText = document.getElementById("total-count");
 
-// Reference to the container and image
-const container = document.getElementById("radio-container");
-const watchImage = document.getElementById("watch-image");
-
+// radio button,image,checkoutbutton declararion
+const radio_btn = document.getElementById("radio-container");
+const image = document.getElementById("image");
+const checkoutButton = document.getElementById("checkout-btn");
+const count_value = document.getElementById("count-total");
+const buttons = document.querySelectorAll(".btn");
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
 // products
 products.forEach((option, index) => {
   const label = document.createElement("label");
@@ -74,7 +81,7 @@ products.forEach((option, index) => {
   if (index === 0) {
     input.checked = true;
     outerDiv.style.borderColor = option.borderColor;
-    watchImage.src = option.imageSrc; // Set initial image
+    image.src = option.imageSrc; // Set initial image
 
     // Update the global object with the initial selection
     currentProduct.bandColor = option.colorName;
@@ -83,12 +90,14 @@ products.forEach((option, index) => {
 
   // input radio button
   input.addEventListener("change", () => {
-    const allLabels = container.querySelectorAll("label");
+    count_value.textContent = 0;
+    total = 0;
+    const allLabels = radio_btn.querySelectorAll("label");
     allLabels.forEach((l) => {
       l.querySelector("div").style.borderColor = "transparent";
     });
     outerDiv.style.borderColor = option.borderColor;
-    watchImage.src = option.imageSrc; // Update the image
+    image.src = option.imageSrc; // Update the image
 
     //set bandcolor and image src
     currentProduct.bandColor = option.colorName;
@@ -101,64 +110,77 @@ products.forEach((option, index) => {
   label.appendChild(outerDiv);
   outerDiv.appendChild(innerDiv);
   label.appendChild(span);
-  container.appendChild(label);
+  radio_btn.appendChild(label);
 });
 
 // Update the counter value
 function updateCount(value) {
-  total += value;
+  // count_value.textContent = 0;
+  let currentValue = parseInt(count_value.textContent);
+  console.log("update value2", currentValue);
+  console.log("value", value);
+  currentValue += value;
+  if (currentValue < 0) {
+    currentValue = 0;
+    return;
+  }
 
-  if (total < 0) total = 0;
-  const counters = document.querySelectorAll(".counter");
-  counters.forEach((counter) => {
-    counter.textContent = total;
-    currentProduct.total = total;
-  });
+  count_value.textContent = currentValue;
+  currentProduct.total = currentValue;
 }
 
 //product pricing
 function handleButtonClick(button, size, price) {
-  const buttons = document.querySelectorAll(".btn");
+  count_value.textContent = 0;
+  total = 0;
 
-  // Reset border colors for all buttons
-  buttons.forEach((btn) =>
-    btn.classList.replace("border-blue-500", "border-[#DBDFEA]")
-  );
+  // Reset border colors and text color of size for all buttons
+  buttons.forEach((btn) => {
+    btn.classList.replace("border-[#6576FF]", "border-[#DBDFEA]");
+    const sizeTxt = btn.querySelector(".size-txt");
+    sizeTxt.classList.replace("text-[#6576FF]", "text-[#364A63]");
+  });
 
-  // Set border color for the clicked button
-  button.classList.replace("border-[#DBDFEA]", "border-blue-500");
-
+  // Set border color and text color of size for the clicked button
+  button.classList.replace("border-[#DBDFEA]", "border-[#6576FF]");
+  const clickedSizeTxt = button.querySelector(".size-txt");
+  clickedSizeTxt.classList.replace("text-[#364A63]", "text-[#6576FF]");
   currentProduct.size = size;
   currentProduct.price = price;
 }
+
 // add to cart button
 function addToCartBtn() {
-  const checkoutButton = document.getElementById("checkout-btn");
-  checkoutButton.style.display = "flex";
-  selectedProducts.size.push(currentProduct.size);
-  selectedProducts.price.push(currentProduct.price);
-  selectedProducts.bandColor.push(currentProduct.bandColor);
-  selectedProducts.imageSrc.push(currentProduct.imageSrc);
-  selectedProducts.total.push(currentProduct.total);
-  console.log("details from add to cart", selectedProducts);
-  total = selectedProducts.total.reduce(
-    (total, currentValue) => total + currentValue
-  );
-  checkoutText.innerText = total;
+  //validation
+  const value = parseInt(count_value.textContent);
+  if (value <= 0) {
+    alert("Please select at least one item");
+    return;
+  } else {
+    checkoutButton.style.display = "flex";
+    selectedProducts.size.push(currentProduct.size);
+    selectedProducts.price.push(currentProduct.price);
+    selectedProducts.bandColor.push(currentProduct.bandColor);
+    selectedProducts.imageSrc.push(currentProduct.imageSrc);
+    selectedProducts.total.push(currentProduct.total);
+    console.log("details from add to cart", selectedProducts);
+    total = selectedProducts.total.reduce(
+      (total, currentValue) => total + currentValue
+    );
+    checkoutText.innerText = total;
+  }
 }
+
+//checkout button
 function checkoutBtn() {
   console.log("checkout from add to cart", selectedProducts);
 
-  const modal = document.getElementById("modal");
-  const modalData = document.getElementById("modalData");
+  modalContent.innerHTML = "";
 
-  // Clear any existing content
-  modalData.innerHTML = "";
-
-  // Generate HTML content dynamically from the data object
   let totalQuantity = 0;
   let totalPrice = 0;
 
+  // table row
   const itemRows = selectedProducts.bandColor
     .map((color, i) => {
       totalQuantity += selectedProducts.total[i];
@@ -178,13 +200,13 @@ function checkoutBtn() {
         <span class="text-[#364A63]">${selectedProducts.name}</span>
       </td>
       <td class="py-4 text-left text-[#364A63]">${color}</td>
-      <td class="py-4 pr-6 font-bold text-[#364A63]">${
+      <td class="py-4 pr-6 font-semibold text-sm	 text-[#364A63]">${
         selectedProducts.size[i]
       }</td>
-      <td class="py-4 font-bold text-[#364A63]">${
+      <td class="py-4 font-semibold text-sm	 text-[#364A63]">${
         selectedProducts.total[i]
       }</td>
-      <td class="py-4 font-bold text-right text-[#364A63]">$${Number(
+      <td class="py-4 font-semibold text-sm	 text-right text-[#364A63]">$${Number(
         selectedProducts.price[i]
       ).toFixed(2)}</td>
     </tr>
@@ -192,7 +214,7 @@ function checkoutBtn() {
     })
     .join("");
 
-  // Generate the modal content including table
+  // table
   const tableHTML = `
    <div class="fixed inset-0 flex items-center justify-center">
         <div class=" bg-white overflow-y-auto rounded-lg shadow-lg p-6 w-full max-w-2xl">
@@ -234,12 +256,7 @@ function checkoutBtn() {
   </div>
 `;
 
-  // Add table HTML to the modalData
-  modalData.innerHTML = tableHTML;
+  // Add table HTML to the modalContent
+  modalContent.innerHTML = tableHTML;
   modal.classList.remove("hidden");
-  modal.addEventListener("click", (event) => {
-    if (event.target.id === "modal") {
-      modal.classList.add("hidden");
-    }
-  });
 }
